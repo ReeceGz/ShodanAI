@@ -24,13 +24,20 @@ ShodanAI is a Discord chat bot that emulates the malevolent AI from System Shock
    npm install
    ```
 
-3. **Create a `.env` file** in the project root with your credentials:
+3. **Create and configure a Discord bot**
+   1. Visit the [Discord Developer Portal](https://discord.com/developers/applications) and click **New Application**.
+   2. Under **Bot**, choose **Add Bot** and confirm.
+   3. Enable the **MESSAGE CONTENT** intent on the bot page.
+   4. Copy the bot token&mdash;you will place it in the `.env` file next.
+   5. Under **OAuth2 → URL Generator**, select the **bot** scope with **Send Messages** permission to generate an invite link. Use that link to add the bot to your server.
+
+4. **Create a `.env` file** in the project root with your credentials:
    ```bash
    DISCORD_TOKEN=your_discord_bot_token
    TOGETHER_API_KEY=your_together_ai_api_key
    ```
 
-4. **Run the bot**
+5. **Run the bot**
    ```bash
    node bot.js
    ```
