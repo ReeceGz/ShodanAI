@@ -4,7 +4,7 @@
   "type": "module",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +15,11 @@
     "dotenv": "^16.5.0",
     "node-fetch": "^3.3.2",
     "openai": "^5.1.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
