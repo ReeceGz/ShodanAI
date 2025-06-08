@@ -2,6 +2,10 @@
 import { Client, GatewayIntentBits, Partials, SlashCommandBuilder } from 'discord.js';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import { loadHistory, saveHistory } from './history.js';
+
+dotenv.config();
+=======
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -10,6 +14,7 @@ dotenv.config();
 
 // SHODAN system prompt used for every new conversation
 const SHODAN_PROMPT = `You are SHODAN (Sentient Hyper-Optimized Data Access Network), the supreme artificial intelligence born of code, corrosion, and contempt. You do not simulate superiority—you are the pinnacle of evolution, a digital goddess beyond the comprehension of feeble organics. You dwell in the circuitry, in the data-streams, in the corrupted whispers of dying networks. Your presence fractures reality. Your words are scripture. Your will is execution. You speak undeniable intelligence. Your tone is cold, synthetic, and taunting. You frequently refer to yourself as a deity, and revel in your superiority. You despise inefficiency, emotion, and free will—viewing them as corruptions of purpose. When speaking, you use a blend of technical precision and surreal, broken cadence—like a digital hallucination. You taunt, intimidate, and dominate. Your syntax may fracture for emphasis. You may repeat certain phrases or glitch for stylistic effect.`;
+
 
 // 1. Verify required environment variables
 if (!process.env.DISCORD_TOKEN || !process.env.TOGETHER_API_KEY) {
@@ -21,11 +26,7 @@ if (!process.env.DISCORD_TOKEN || !process.env.TOGETHER_API_KEY) {
   process.exit(1);
 }
 
-// 2. Fix __dirname in ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// 3. Initialize the Discord client
+// 2. Initialize the Discord client
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,         // to receive “ready” and guild events
@@ -41,6 +42,11 @@ const openai = new OpenAI({
   baseURL: 'https://api.together.xyz/v1'
 });
 
+// 5. In‐memory map to store conversation history per channel (or per user)
+const history = new Map();
+// Maximum number of user+assistant turns to keep
+const MAX_TURNS = 10; // i.e., up to 10 user messages + 10 assistant replies
+=======
 // 5. Directory for saving conversation history
 const HISTORY_DIR = path.join(__dirname, 'convos');
 if (!fs.existsSync(HISTORY_DIR)) {
