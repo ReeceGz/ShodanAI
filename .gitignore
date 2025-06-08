@@ -1,0 +1,23 @@
+# Node dependencies
+node_modules/
+
+# Conversation logs
+convos/
+
+# Environment variables
+.env
+
+# macOS artifacts
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows artifacts
+ehthumbs.db
+Thumbs.db
+
+# Other OS-generated files
+Icon?
+
