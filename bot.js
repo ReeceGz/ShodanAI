@@ -1,5 +1,5 @@
 // bot.js
-import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import { Client, GatewayIntentBits, Partials, SlashCommandBuilder } from 'discord.js';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import fs from 'fs';
@@ -81,8 +81,18 @@ function saveHistory(channelId, convoArray) {
 }
 
 // 8. Once the bot is ready, log to console
-client.once('ready', () => {
+client.once('ready', async () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
+  const resetCmd = new SlashCommandBuilder()
+    .setName('reset')
+    .setDescription('Clear conversation history for this channel');
+
+  try {
+    await client.application.commands.create(resetCmd);
+    console.log('� /reset command registered');
+  } catch (err) {
+    console.error('Failed to register /reset command:', err);
+  }
 });
 
 // 9. Listen for incoming messages
@@ -182,5 +192,24 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-// 10. Log in to Discord
+// 10. Listen for slash command interactions
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+  if (interaction.commandName !== 'reset') return;
+
+  const convKey = interaction.channelId;
+  history.delete(convKey);
+
+  const filePath = path.join(HISTORY_DIR, `${convKey}.json`);
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+
+  await interaction.reply({
+    content: '🗑️ Conversation history cleared for this channel.',
+    ephemeral: true,
+  });
+});
+
+// 11. Log in to Discord
 client.login(process.env.DISCORD_TOKEN);

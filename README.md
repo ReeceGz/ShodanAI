@@ -47,6 +47,7 @@ The bot will log in to Discord and begin listening for mentions. Conversation lo
 ## Usage
 
 Invite the bot to your server and mention it in a channel. When you tag the bot with a question or message, it will reply in the style of SHODAN. Messages and replies are stored so that follow-up conversations maintain context (up to a limit of recent turns).
+Use the `/reset` slash command to clear the saved history for the current channel if you want to start fresh.
 
 ## License
 
