@@ -42,3 +42,11 @@ export function saveHistory(channelId, convoArray) {
   const filePath = path.join(HISTORY_DIR, `${channelId}.json`);
   fs.writeFileSync(filePath, JSON.stringify(convoArray, null, 2));
 }
+
+export function deleteHistory(channelId) {
+  ensureHistoryDir();
+  const filePath = path.join(HISTORY_DIR, `${channelId}.json`);
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+}

@@ -4,12 +4,13 @@ import os from 'os';
 
 let loadHistory;
 let saveHistory;
+let deleteHistory;
 let tempDir;
 
 beforeAll(async () => {
   tempDir = fs.mkdtempSync(path.join(os.tmpdir(), '.convos-'));
   process.env.HISTORY_DIR = tempDir;
-  ({ loadHistory, saveHistory } = await import('../history.js'));
+  ({ loadHistory, saveHistory, deleteHistory } = await import('../history.js'));
 });
 
 afterAll(() => {
@@ -39,4 +40,13 @@ test('Saving history and verifying file contents', () => {
   saveHistory(channelId, convo);
   const raw = fs.readFileSync(path.join(tempDir, `${channelId}.json`), 'utf-8');
   expect(JSON.parse(raw)).toEqual(convo);
+});
+
+test('Deleting history removes the file', () => {
+  const channelId = 'delete';
+  const filePath = path.join(tempDir, `${channelId}.json`);
+  fs.writeFileSync(filePath, 'data');
+  expect(fs.existsSync(filePath)).toBe(true);
+  deleteHistory(channelId);
+  expect(fs.existsSync(filePath)).toBe(false);
 });
